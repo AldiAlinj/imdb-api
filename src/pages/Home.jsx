@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchAsyncMovies, getLoading, getMovies } from "../redux/movieSlice";
 import "react-calendar/dist/Calendar.css";
+import MovieCard from "../components/MovieCard";
+import { GridLoader } from "react-spinners";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -68,9 +70,10 @@ const Home = () => {
     }
 
     setParameters({
-      search: "",
+      title: "",
       genre: "",
-      rating: "",
+      minRating: "",
+      maxRating: "",
       startDate: "",
       endDate: "",
     });
@@ -87,18 +90,15 @@ const Home = () => {
           <h1>IMDB API</h1>
         </div>
       </div>
-      <div className="col-12">
-        <h1>Filter Movies</h1>
-      </div>
       <div className="row justify-content-center align-items-center">
-        <div className="col-2">
-          <label for="basic-url" class="form-label">
+        <div className="col-sm-12 col-md-4 col-lg-2">
+          <label htmlFor="basic-url" className="form-label">
             Title
           </label>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="text"
-              class="form-control"
+              className="form-control"
               id="search"
               placeholder="Search..."
               onChange={(event) =>
@@ -107,81 +107,83 @@ const Home = () => {
             />
           </div>
         </div>
-        <div className="col-2">
-          <label for="basic-url" class="form-label">
+        <div className="col-sm-12 col-md-4 col-lg-2">
+          <label htmlFor="basic-url" className="form-label">
             Rating
           </label>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <select
-              class="form-select"
+              className="form-select"
               id="rating"
               onChange={(event) =>
                 setParameters({ ...parameters, minRating: event.target.value })
               }
             >
-              <option selected>Minimal Rating</option>
+              <option defaultValue>Minimal Rating</option>
               {ratings.map((rating) => (
-                <option value={rating}>{rating}</option>
+                <option key={rating} value={rating}>
+                  {rating}
+                </option>
               ))}
             </select>
           </div>
         </div>
-        {parameters.minRating === "" ? null : (
-          <div className="col-2">
-            <label for="basic-url" class="form-label">
-              Rating
-            </label>
-            <div class="input-group mb-3">
-              <select
-                class="form-select"
-                id="rating"
-                onChange={(event) =>
-                  setParameters({
-                    ...parameters,
-                    minRating: event.target.value,
-                  })
-                }
-              >
-                <option selected>Maximal Rating</option>
-                {ratings
-                  .slice(parameters.minRating, ratings.length)
-                  .map((rating) => (
-                    <option value={rating}>{rating}</option>
-                  ))}
-              </select>
-            </div>
+        <div className="col-sm-12 col-md-4 col-lg-2">
+          <label htmlFor="basic-url" className="form-label">
+            Rating
+          </label>
+          <div className="input-group mb-3">
+            <select
+              disabled={parameters.minRating === "" ? true : false}
+              className="form-select"
+              id="rating"
+              onChange={(event) =>
+                setParameters({
+                  ...parameters,
+                  maxRating: event.target.value,
+                })
+              }
+            >
+              <option defaultValue>Maximal Rating</option>
+              {ratings
+                .slice(parameters.minRating, ratings.length)
+                .map((rating) => (
+                  <option key={rating} value={rating}>
+                    {rating}
+                  </option>
+                ))}
+            </select>
           </div>
-        )}
-        <div className="col-2">
-          <label for="basic-url" class="form-label">
+        </div>
+        <div className="col-sm-12 col-md-4 col-lg-2">
+          <label htmlFor="basic-url" className="form-label">
             Genre
           </label>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <select
-              class="form-select"
+              className="form-select"
               id="genre"
               onChange={(event) =>
                 setParameters({ ...parameters, genre: event.target.value })
               }
             >
-              <option selected>Choose...</option>
-              {genres.map((genre) => (
-                <option value={genre.toLowerCase()}>{genre}</option>
+              <option defaultValue>Choose...</option>
+              {genres.map((genre, index) => (
+                <option key={index} value={genre.toLowerCase()}>
+                  {genre}
+                </option>
               ))}
             </select>
           </div>
         </div>
-        <div className="col-2">
-          <label for="basic-url" class="form-label">
-            Starting Year
+        <div className="col-sm-12 col-md-4 col-lg-2">
+          <label htmlFor="basic-url" className="form-label">
+            From
           </label>
-          <div class="input-group mb-3 d-flex justify-content-center align-items-center">
-            <label className="me-2" htmlFor="startDate">
-              From{" "}
-            </label>
+          <div className="input-group mb-3 d-flex justify-content-center align-items-center">
             <input
               type="date"
-              class="form-control"
+              className="form-control"
               id="startDate"
               onChange={(event) =>
                 setParameters({ ...parameters, startDate: event.target.value })
@@ -189,64 +191,53 @@ const Home = () => {
             />
           </div>
         </div>
-        <div className="col-2">
-          {parameters.startDate === "" ? null : (
-            <>
-              <label for="basic-url" class="form-label">
-                Ending Year
-              </label>
-              <div class="input-group mb-3 d-flex justify-content-center align-items-center">
-                <label className="me-2" htmlFor="endDate">
-                  To{" "}
-                </label>
-                <input
-                  type="date"
-                  class="form-control"
-                  min={parameters.startDate}
-                  id="endDate"
-                  onChange={(event) =>
-                    setParameters({
-                      ...parameters,
-                      endDate: event.target.value,
-                    })
-                  }
-                />
-              </div>
-            </>
-          )}
+        <div className="col-sm-12 col-md-4 col-lg-2">
+          <label htmlFor="basic-url" className="form-label">
+            To
+          </label>
+          <div className="input-group mb-3 d-flex justify-content-center align-items-center">
+            <input
+              disabled={parameters.startDate === "" ? true : false}
+              type="date"
+              className="form-control"
+              min={parameters.startDate}
+              id="endDate"
+              onChange={(event) =>
+                setParameters({
+                  ...parameters,
+                  endDate: event.target.value,
+                })
+              }
+            />
+          </div>
         </div>
-        <div className="col-2">
-          <button type="button" class="btn btn-primary" onClick={searchMovies}>
+        <div className="col-sm-12 col-md-4 col-lg-2 m-3">
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={searchMovies}
+          >
             Search
           </button>
         </div>
       </div>
       {loading ? (
-        <div>loading...</div>
+        <div>
+          <div className="d-flex justify-content-center align-items-center mt-5">
+            <GridLoader />
+          </div>
+        </div>
       ) : (
         <div className="container-fluid">
-          <div className="row gy-3">
-            {movies.results.map((movie) => (
-              <div className="col-4 d-flex justify-content-center align-items-center">
-                <div class="card" style={{ width: "18rem" }}>
-                  <img
-                    src={movie.image}
-                    width={250}
-                    height={400}
-                    class="card-img-top"
-                    alt="..."
-                  />
-                  <div class="card-body">
-                    <h5 class="card-title fs-5">{movie.title}</h5>
-                    <p class="card-text">{movie.plot}</p>
-                    <a href="" class="btn btn-primary">
-                      Go to movie
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {movies.results.length === 0 ? (
+            <h1>No results from your search. Please try again.</h1>
+          ) : (
+            <div className="row gy-3">
+              {movies.results.map((movie) => (
+                <MovieCard key={movie.id} movie={movie} />
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

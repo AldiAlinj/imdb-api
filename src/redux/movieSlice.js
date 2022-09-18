@@ -4,7 +4,7 @@ import axios from "axios";
 export const fetchAsyncMovies = createAsyncThunk(
   "movies/fetchAsyncMovies",
   async (parameters) => {
-    const url = `https://imdb-api.com/API/AdvancedSearch/k_5l07gzzx?groups=top_250&count=250&release_date=${parameters.startDate},${parameters.endDate}&genres=${parameters.genre},&user_rating=${parameters.minRating},${parameters.maxRating}&title=${parameters.title}`;
+    const url = `https://imdb-api.com/API/AdvancedSearch/k_q5l4s2fc?groups=top_250&count=250&release_date=${parameters.startDate},${parameters.endDate}&genres=${parameters.genre},&user_rating=${parameters.minRating},${parameters.maxRating}&title=${parameters.title}`;
     console.log(url);
     const response = await axios.get(url);
 
