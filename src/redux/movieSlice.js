@@ -5,8 +5,7 @@ import axios from "axios";
 export const fetchAsyncMovies = createAsyncThunk(
     'movies/fetchAsyncMovies',
     async(parameters) => {
-        const url = `https://imdb-api.com/API/AdvancedSearch/k_q5l4s2fc?groups=top_250&count=250&release_date=${parameters.year}&genres=${parameters.genre}&user_rating=${parameters.rating}`
-        console.log(url);
+        const url = `https://imdb-api.com/API/AdvancedSearch/k_8wgipecq?groups=top_250&count=250&release_date=${parameters.startDate},${parameters.endDate}&genres=${parameters.genre}&user_rating=${parameters.rating}`
         const response = await axios.get(url)
 
         return response.data
@@ -27,12 +26,13 @@ const movieSlice = createSlice({
     initialState,
     reducers:{},
     extraReducers: {
-        [fetchAsyncMovies.pending] : () => {
+        [fetchAsyncMovies.pending] : (state) => {
             console.log('Movies Pending');
+            return {...state, loading: true}
         },
         [fetchAsyncMovies.fulfilled]: (state, {payload}) => {
             console.log('Movies fetched');
-            return {...state, movies: payload}
+            return {...state, movies: payload, loading: false}
         },
         [fetchAsyncMovies.rejected] : () => {
             console.log('Movies Rejected');
@@ -43,4 +43,5 @@ const movieSlice = createSlice({
 
 
 export const getMovies = (state) => state.movies.movies
+export const getLoading = (state) => state.movies.loading
 export default movieSlice.reducer
