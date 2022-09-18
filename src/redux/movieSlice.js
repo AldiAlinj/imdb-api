@@ -14,8 +14,7 @@ export const fetchAsyncMovies = createAsyncThunk(
 
 const initialState = {
   movies: {},
-  loading: true,
-  film: {},
+  loading: true
 };
 
 const movieSlice = createSlice({
@@ -31,8 +30,9 @@ const movieSlice = createSlice({
       console.log("Movies fetched");
       return { ...state, movies: payload, loading: false };
     },
-    [fetchAsyncMovies.rejected]: () => {
+    [fetchAsyncMovies.rejected]: (state) => {
       console.log("Movies Rejected");
+      return {...state, loading: false}
     },
   },
 });

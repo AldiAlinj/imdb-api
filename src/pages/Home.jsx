@@ -4,6 +4,7 @@ import { fetchAsyncMovies, getLoading, getMovies } from "../redux/movieSlice";
 import "react-calendar/dist/Calendar.css";
 import MovieCard from "../components/MovieCard";
 import { GridLoader } from "react-spinners";
+import InputField from "../components/InputField";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -61,13 +62,9 @@ const Home = () => {
   });
 
   const searchMovies = () => {
-    if (parameters.startDate !== "" && parameters.endDate === "") {
-      alert("Please enter an end date");
-    } else if (parameters.startDate === "" && parameters.endDate !== "") {
-      alert("Please enter a start date!");
-    } else {
+ 
       dispatch(fetchAsyncMovies(parameters));
-    }
+    
 
     setParameters({
       title: "",
@@ -81,6 +78,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchAsyncMovies(parameters));
+    // eslint-disable-next-line
   }, [dispatch]);
 
   return (
@@ -91,11 +89,9 @@ const Home = () => {
         </div>
       </div>
       <div className="row justify-content-center align-items-center">
-        <div className="col-sm-12 col-md-4 col-lg-2">
-          <label htmlFor="basic-url" className="form-label">
-            Title
-          </label>
-          <div className="input-group mb-3">
+        <InputField
+          label="Title"
+          children={
             <input
               type="text"
               className="form-control"
@@ -105,13 +101,11 @@ const Home = () => {
                 setParameters({ ...parameters, title: event.target.value })
               }
             />
-          </div>
-        </div>
-        <div className="col-sm-12 col-md-4 col-lg-2">
-          <label htmlFor="basic-url" className="form-label">
-            Rating
-          </label>
-          <div className="input-group mb-3">
+          }
+        />
+        <InputField
+          label="Minimal Rating"
+          children={
             <select
               className="form-select"
               id="rating"
@@ -126,13 +120,11 @@ const Home = () => {
                 </option>
               ))}
             </select>
-          </div>
-        </div>
-        <div className="col-sm-12 col-md-4 col-lg-2">
-          <label htmlFor="basic-url" className="form-label">
-            Rating
-          </label>
-          <div className="input-group mb-3">
+          }
+        />
+        <InputField
+          label="Maximum Rating"
+          children={
             <select
               disabled={parameters.minRating === "" ? true : false}
               className="form-select"
@@ -153,13 +145,11 @@ const Home = () => {
                   </option>
                 ))}
             </select>
-          </div>
-        </div>
-        <div className="col-sm-12 col-md-4 col-lg-2">
-          <label htmlFor="basic-url" className="form-label">
-            Genre
-          </label>
-          <div className="input-group mb-3">
+          }
+        />
+        <InputField
+          label="Genre"
+          children={
             <select
               className="form-select"
               id="genre"
@@ -174,13 +164,11 @@ const Home = () => {
                 </option>
               ))}
             </select>
-          </div>
-        </div>
-        <div className="col-sm-12 col-md-4 col-lg-2">
-          <label htmlFor="basic-url" className="form-label">
-            From
-          </label>
-          <div className="input-group mb-3 d-flex justify-content-center align-items-center">
+          }
+        />
+        <InputField
+          label="From"
+          children={
             <input
               type="date"
               className="form-control"
@@ -189,13 +177,11 @@ const Home = () => {
                 setParameters({ ...parameters, startDate: event.target.value })
               }
             />
-          </div>
-        </div>
-        <div className="col-sm-12 col-md-4 col-lg-2">
-          <label htmlFor="basic-url" className="form-label">
-            To
-          </label>
-          <div className="input-group mb-3 d-flex justify-content-center align-items-center">
+          }
+        />
+        <InputField
+          label="To"
+          children={
             <input
               disabled={parameters.startDate === "" ? true : false}
               type="date"
@@ -209,8 +195,8 @@ const Home = () => {
                 })
               }
             />
-          </div>
-        </div>
+          }
+        />
         <div className="col-sm-12 col-md-4 col-lg-2 m-3">
           <button
             type="button"
