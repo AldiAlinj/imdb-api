@@ -36,10 +36,24 @@ const Home = () => {
     "War",
   ];
 
+  const ratings = [
+    "1.0",
+    "2.0",
+    "3.0",
+    "4.0",
+    "5.0",
+    "6.0",
+    "7.0",
+    "8.0",
+    "9.0",
+    "10.0",
+  ];
+
   const [parameters, setParameters] = useState({
     title: "",
     genre: "",
-    rating: "",
+    minRating: "",
+    maxRating: "",
     startDate: "",
     endDate: "",
   });
@@ -102,18 +116,42 @@ const Home = () => {
               class="form-select"
               id="rating"
               onChange={(event) =>
-                setParameters({ ...parameters, rating: event.target.value })
+                setParameters({ ...parameters, minRating: event.target.value })
               }
             >
-              <option selected>Choose...</option>
-              <option value="1.0">One star</option>
-              <option value="2.0">Two stars</option>
-              <option value="3.0">Three stars</option>
-              <option value="4.0">Four stars</option>
-              <option value="5.0">Five stars</option>
+              <option selected>Minimal Rating</option>
+              {ratings.map((rating) => (
+                <option value={rating}>{rating}</option>
+              ))}
             </select>
           </div>
         </div>
+        {parameters.minRating === "" ? null : (
+          <div className="col-2">
+            <label for="basic-url" class="form-label">
+              Rating
+            </label>
+            <div class="input-group mb-3">
+              <select
+                class="form-select"
+                id="rating"
+                onChange={(event) =>
+                  setParameters({
+                    ...parameters,
+                    minRating: event.target.value,
+                  })
+                }
+              >
+                <option selected>Maximal Rating</option>
+                {ratings
+                  .slice(parameters.minRating, ratings.length)
+                  .map((rating) => (
+                    <option value={rating}>{rating}</option>
+                  ))}
+              </select>
+            </div>
+          </div>
+        )}
         <div className="col-2">
           <label for="basic-url" class="form-label">
             Genre
